@@ -13,6 +13,7 @@ namespace SampleMVCApp.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
+            ViewData["Message"] = "Hello! this is sample message!";
             return View();
         }
     }
