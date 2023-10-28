@@ -10,6 +10,16 @@ namespace SampleMVCApp.Controllers
 {
     public class HelloController : Controller
     {
+        public List<string> list;
+
+        public HelloController()
+        {
+            list = new List<string>();
+            list.Add("Japan");
+            list.Add("USA");
+            list.Add("UK");
+        }
+
         // GET: /<controller>/
         public IActionResult Index()
         {
@@ -17,6 +27,8 @@ namespace SampleMVCApp.Controllers
             ViewData["name"] = "";
             ViewData["mail"] = "";
             ViewData["tel"] = "";
+            ViewData["list"] = "";
+            ViewData["listdata"] = list;
             return View();
         }
 
@@ -26,7 +38,10 @@ namespace SampleMVCApp.Controllers
             ViewData["name"] = name;
             ViewData["mail"] = mail;
             ViewData["tel"] = tel;
-            ViewData["message"] = ViewData["name"] + ", " + ViewData["mail"] + ", " + ViewData["tel"];
+            ViewData["message"] = ViewData["name"] + ", " + ViewData["mail"] + ", " + ViewData["tel"]
+                + ", " + Request.Form["list"] + " selected.";
+            ViewData["list"] = Request.Form["list"][0];
+            ViewData["listdata"] = list;
             return View("Index");
         }
     }
