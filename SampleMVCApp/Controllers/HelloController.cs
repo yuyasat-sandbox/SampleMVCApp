@@ -30,6 +30,9 @@ namespace SampleMVCApp.Controllers
             ViewData["tel"] = "";
             ViewData["list"] = "";
             ViewData["listdata"] = list;
+            HttpContext.Session.SetInt32("id", id);
+            Console.WriteLine("Hello, " + name);
+            HttpContext.Session.SetString("name", name);
             return View();
         }
 
@@ -44,6 +47,15 @@ namespace SampleMVCApp.Controllers
             ViewData["list"] = Request.Form["list"][0];
             ViewData["listdata"] = list;
             return View("Index");
+        }
+
+        [HttpGet("Other")]
+        public IActionResult Other()
+        {
+            ViewData["id"] = HttpContext.Session.GetInt32("id");
+            ViewData["name"] = HttpContext.Session.GetString("name");
+            ViewData["message"] = "保存されたセッションの値を表示します。";
+            return View();
         }
     }
 }
