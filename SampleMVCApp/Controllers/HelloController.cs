@@ -20,10 +20,11 @@ namespace SampleMVCApp.Controllers
             list.Add("UK");
         }
 
-        // GET: /<controller>/
-        public IActionResult Index()
+        [Route("hello/{id?}/{name?}")]
+        public IActionResult Index(int id, string name)
         {
-            ViewData["Message"] = "Input your data:";
+            // ViewData["Message"] = "Input your data:";
+            ViewData["Message"] = "id = " + id + ", name = " + name;
             ViewData["name"] = "";
             ViewData["mail"] = "";
             ViewData["tel"] = "";
