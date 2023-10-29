@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,6 +35,10 @@ namespace SampleMVCApp.Controllers
             HttpContext.Session.SetInt32("id", id);
             Console.WriteLine("Hello, " + name);
             HttpContext.Session.SetString("name", name);
+            MyData ob = new MyData(id, name);
+            String s = ObjectToString(ob);
+            HttpContext.Session.SetString("object", s);
+            ViewData["object"] = ob;
             return View();
         }
 
@@ -55,8 +61,48 @@ namespace SampleMVCApp.Controllers
             ViewData["id"] = HttpContext.Session.GetInt32("id");
             ViewData["name"] = HttpContext.Session.GetString("name");
             ViewData["message"] = "保存されたセッションの値を表示します。";
+            String s = HttpContext.Session.GetString("object") ?? "";
+            ViewData["object"] = StringToObject(s);
             return View();
+        }
+
+        private String ObjectToString(MyData ob)
+        {
+            return JsonSerializer.Serialize<MyData>(ob);
+        }
+
+        private MyData? StringToObject(String s)
+        {
+            MyData? ob;
+            try
+            {
+                ob = JsonSerializer.Deserialize<MyData>(s);
+
+            }
+            catch (Exception e)
+            {
+                ob = new MyData(0, "noname");
+            }
+
+            return ob;
         }
     }
 }
 
+[Serializable]
+class MyData
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public MyData(int id, string name)
+    {
+        this.Id = id;
+        this.Name = name;
+    }
+
+    public override string ToString()
+    {
+        return "<" + Id + ": " + Name + ">";
+    }
+}
